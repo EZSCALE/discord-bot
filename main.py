@@ -1,8 +1,10 @@
 import asyncio
+import datetime
+import os
 import sys
+
 import aiohttp
 import discord
-import os
 
 # CONFIG
 BOT_TOKEN = os.environ['BOT_TOKEN']
@@ -27,6 +29,7 @@ class LivePlayercountBot(discord.Client):
 
 async def get_playercount(session):
     try:
+        x = datetime.datetime.now()
         if GAME == 'BF4' or GAME == 'BFH':
             url = f"https://keeper.battlelog.com/snapshot/{SERVER_GUID}"
             async with session.get(url) as r:
@@ -35,6 +38,7 @@ async def get_playercount(session):
                 for n in range(len(page["snapshot"]["teamInfo"])):
                     true_playercount += len(page["snapshot"]["teamInfo"][str(n)]["players"])
                 max_slots = page["snapshot"]["maxPlayers"]
+                print('[' + x.strftime("%X") + '] Player Count: ' + f"{true_playercount}/{max_slots}")
                 return f"{true_playercount}/{max_slots}"  # discord status message
         elif GAME == 'BF3':
             url = f"https://battlelog.battlefield.com/bf3/servers/show/pc/{SERVER_GUID}?json=1&join=false"
@@ -42,13 +46,15 @@ async def get_playercount(session):
                 page = await r.json()
                 max_slots = page["message"]["SERVER_INFO"]["slots"]["2"]["max"]
                 true_playercount = len(page["message"]["SERVER_PLAYERS"])
+                print('[' + x.strftime("%X") + '] Player Count: ' + f"{true_playercount}/{max_slots}")
                 return f"{true_playercount}/{max_slots}"  # discord status message
-        elif GAME == 'BC2':
+        elif GAME == 'BC2' or GAME == 'GAMETRACKER':
             async with session.get(SERVER_GUID) as r:
                 page = await r.text()
                 # isolate playercount value
                 page = page.split('"HTML_num_players">')[1].split('</span>\n\t\t\t<br/>\n\t\t\t')[0]
                 playercount = page.replace('</span> / <span id="HTML_max_players">', '/')
+                print('[' + x.strftime("%X") + '] Player Count: ' + playercount)
                 return playercount  # discord status message
         else:
             raise Exception("Unsupported Game")
