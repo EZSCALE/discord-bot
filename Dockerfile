@@ -1,4 +1,4 @@
-FROM python:3.7.8
+FROM python:3.10.8
 
 ENV BOT_TOKEN=""
 ENV SERVER_GUID=""
