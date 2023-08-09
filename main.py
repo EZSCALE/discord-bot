@@ -108,7 +108,7 @@ async def handle_gametracker(session, server_guid):
         return f"{num_players}/{max_players}"
 
 
-async def handle_insurgency_sandstorm(_, server_guid):
+async def handle_source_server(_, server_guid):
     # Extract IP and port from the server_guid
     ip, port = server_guid.split(":")
     port = int(port)
@@ -124,7 +124,7 @@ async def handle_insurgency_sandstorm(_, server_guid):
         return f"{num_players}/{max_players}"
 
     except Exception as e:
-        print(f"Error querying Insurgency Sandstorm server: {e}")
+        print(f"Error querying SOURCE server: {e}")
         return "Error fetching data"
 
 GAME_HANDLERS = {
@@ -132,7 +132,7 @@ GAME_HANDLERS = {
     'BFH': handle_bf4_bfh,
     'BF3': handle_bf3,
     'GAMETRACKER': handle_gametracker,
-    'INSURGENCY_SANDSTORM': handle_insurgency_sandstorm
+    'SOURCE': handle_source_server
 }
 
 intents = Intents.default()
