@@ -1,2 +1,5 @@
 aiohttp
 discord
+bs4
+python-dotenv
+python-a2s
