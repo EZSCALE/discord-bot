@@ -1,0 +1,25 @@
+---
+name: Build Docker Image
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "ghcr.io/${{ env.REPO_NAME }}:0.0.${{ github.run_number }}, ghcr.io/${{ env.REPO_NAME }}:latest"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          prerelease: false
+          name: "0.0.${{ github.run_number }}"
+          tag: "0.0.${{ github.run_number }}"
+          body: "Release 0.0.${{ github.run_number }}"
